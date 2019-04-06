@@ -1,4 +1,4 @@
-ass SimulationEngine:
+class SimulationEngine:
     def SimulationEngine(self, steptime, bodies, masslessbodies):
         self.set_steptime(steptime)
         self.set_bodies(bodies)
