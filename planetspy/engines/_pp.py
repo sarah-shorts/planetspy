@@ -14,22 +14,23 @@ class PP(SimulationEngine):
             y_dist = np.zeros((num, num))
             z_dist = np.zeros((num, num))
             for i in range(num):
-                padargs = [(0, num - i + 1), 'constant']
-                x_dist[i] = np.pad((bodyref[:i - 1,0]-bodyref[i,0]), *padargs)
-                y_dist[i] = np.pad((bodyref[:i - 1,1]-bodyref[i,1]), *padargs)
-                z_dist[i] = np.pad((bodyref[:i - 1,2]-bodyref[i,2]), *padargs)
-                distsq[i] = np.pad((x_dist[:i - 1]**2 + y_dist[:i - 1]**2 + z_dist[:i - 1]**2), *padargs, constant_values = 0)
-                dist[i] = np.pad(np.sqrt(distsq[i,:i-1]), *padargs, constant_values = 0)
-                distsq[i] = np.pad(1/distsq[i,:i-1], *padargs, constant_values = 0)
+                padargs = [(0, num - i), 'constant']
+                x_dist[i] = np.pad((bodyref[:i,0]-bodyref[i,0]), *padargs, constant_values = 0)
+                y_dist[i] = np.pad((bodyref[:i,1]-bodyref[i,1]), *padargs, constant_values = 0)
+                z_dist[i] = np.pad((bodyref[:i,2]-bodyref[i,2]), *padargs, constant_values = 0)
+                distsq[i] = np.pad((x_dist[i,:i]**2 + y_dist[i,:i]**2 + z_dist[i,:i]**2), *padargs, constant_values = 0)
+                dist[i] = np.pad(np.sqrt(distsq[i,:i]), *padargs, constant_values = 0)
+                distsq[i] = np.pad(1/distsq[i,:i], *padargs, constant_values = 0)
             dist += dist.T
-            distsqr += distsqr.T
+            distsq += distsq.T
             x_dist -= x_dist.T
             y_dist -= y_dist.T
             z_dist -= z_dist.T
-            acceltot = self.G*np.hstack(bodyref[7,::])*distsq
-            accel_x = np.sum(-(acceltot*(x_dist/dist)), axis=0)
-            accel_y = np.sum(-(acceltot*(y_dist/dist)), axis=0)
-            accel_z = np.sum(-(acceltot*(z_dist/dist)), axis=0)
+            acceltot = self.G*np.hstack(bodyref[::,7])*distsq
+            dist = np.where(dist != 0, dist, np.inf)
+            accel_x = np.sum((acceltot*(x_dist/dist)), axis=1)
+            accel_y = np.sum((acceltot*(y_dist/dist)), axis=1)
+            accel_z = np.sum((acceltot*(z_dist/dist)), axis=1)
             dvx = accel_x * self.steptime
             dvy = accel_y * self.steptime
             dvz = accel_z * self.steptime
