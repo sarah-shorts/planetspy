@@ -1,5 +1,5 @@
 class Simulate:
-    def Simulate(self, engine, stepsize, steptime, bodies, masslessbodies = None, envmod = None, bailout=False):
+    def __init__(self, engine, stepsize, steptime, bodies, masslessbodies = None, envmod = None, bailout=False):
         self.engine = engine(steptime, bodies, masslessbodies)
         self.stepsize = stepsize
         self.steptime = steptime
@@ -17,10 +17,10 @@ class Simulate:
                 self.engine.set_bodies(self.bodies)
                 self.engine.set_masslessbodies(self.masslessbodies)
                 self.dirty=False
-            self.simulate(self.stepsize)
+            self.engine.simulate(self.stepsize)
             self.steps += self.stepsize
             self.time += self.stepsize*self.steptime
             if any([i.run() for i in self.envmod]):
                 break
-    def dirty(self):
+    def set_dirty(self):
         self.dirty = True

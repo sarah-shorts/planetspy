@@ -6,7 +6,7 @@ class SimulationEngine:
         [[bodyuid, ...]xN] #list of python lists bodyuid is a string that is unique
     ]
     """
-    def SimulationEngine(self, steptime, bodies, masslessbodies):
+    def __init__(self, steptime, bodies, masslessbodies):
         self.set_steptime(steptime)
         self.set_bodies(bodies)
         self.set_masslessbodies(masslessbodies)
