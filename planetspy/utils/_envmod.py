@@ -52,8 +52,10 @@ class collisions:
 
 class record:
     loc = []
-    def __init__(self):
+    def __init__(self, interval = 1):
         self.loc = []
+        self.interval = interval
+        self.counter = 0
     def save(self, filename):
         locs = self.loc.copy()
         for i in range(len(locs)):
@@ -70,9 +72,11 @@ class record:
                 locr[i] = np.array(locr[i])
             self.loc = locr
     def run(self, simclass):
-        self.loc.append(np.copy(simclass.bodies[0][::,0:3]))
-        if simclass.masslessbodies:
-            loc[len(loc) - 1].append(simclass.masslessbodies[0][::,0:3])
+        if self.interval % 1 == 0:
+            self.loc.append(np.copy(simclass.bodies[0][::,0:3]))
+            if simclass.masslessbodies:
+                loc[len(loc) - 1].append(simclass.masslessbodies[0][::,0:3])
+        self.counter += 1
         return False
 
 ###  normally distributed dust cloud  ####
