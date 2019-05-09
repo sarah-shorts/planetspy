@@ -1,4 +1,6 @@
 import numpy as np
+import json
+import gzip
 
 class collisions:
     loc = []
@@ -52,6 +54,21 @@ class record:
     loc = []
     def __init__(self):
         self.loc = []
+    def save(self, filename):
+        locs = self.loc.copy()
+        for i in range(len(locs)):
+            locs[i] = locs[i].tolist()
+        jsbytes = json.dumps(locs) + "\n"
+        jsbytes = jsbytes.encode("utf-8")
+        with gzip.GzipFile(filename, "w+") as fout:
+            fout.write(jsbytes)
+    def load(self, filename):
+        with gzip.GzipFile(filename, "r") as fin:
+            jsbytes = fin.read()
+            locr = json.loads(jsbytes.decode("utf-8"))
+            for i in range(len(locr)):
+                locr[i] = np.array(locr[i])
+            self.loc = locr
     def run(self, simclass):
         self.loc.append(np.copy(simclass.bodies[0][::,0:3]))
         if simclass.masslessbodies:
