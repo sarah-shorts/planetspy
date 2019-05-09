@@ -72,7 +72,7 @@ class record:
                 locr[i] = np.array(locr[i])
             self.loc = locr
     def run(self, simclass):
-        if self.interval % 1 == 0:
+        if self.counter % self.interval == 0:
             self.loc.append(np.copy(simclass.bodies[0][::,0:3]))
             if simclass.masslessbodies:
                 loc[len(loc) - 1].append(simclass.masslessbodies[0][::,0:3])
