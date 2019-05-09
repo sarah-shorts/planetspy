@@ -12,6 +12,9 @@ class Simulate:
         self.time = 0.0
     def main_loop(self):
         while not self.bailout or self.time < self.bailout:
+            if self.envmod != None:
+                if any([i.run(self) for i in self.envmod]):
+                    break
             if self.dirty:
                 self.engine.set_steptime(self.steptime)
                 self.engine.set_bodies(self.bodies)
@@ -20,8 +23,5 @@ class Simulate:
             self.engine.simulate(self.stepsize)
             self.steps += self.stepsize
             self.time += self.stepsize*self.steptime
-            if self.envmod != None:
-                if any([i.run(self) for i in self.envmod]):
-                    break
     def set_dirty(self):
         self.dirty = True
