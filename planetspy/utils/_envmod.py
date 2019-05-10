@@ -73,11 +73,20 @@ class record:
             self.loc = locr
     def run(self, simclass):
         if self.counter % self.interval == 0:
-            self.loc.append(np.copy(simclass.bodies[0][::,0:3]))
+            self.loc.append(np.copy(simclass.bodies[0][::,[0,1,2,6]]))
             if simclass.masslessbodies:
-                loc[len(loc) - 1].append(simclass.masslessbodies[0][::,0:3])
+                loc[len(loc) - 1].append(simclass.masslessbodies[0][::,[0,1,2,6]])
         self.counter += 1
         return False
+
+class progress:
+    def __init__(self, interval = 1):
+        self.interval = interval
+        self.counter = 0
+    def run(self, simclass):
+        if self.counter % self.interval == 0:
+            print("{:f}%".format(simclass.time*100/simclass.bailout))
+        self.counter += 1
 
 ###  normally distributed dust cloud  ####
 
